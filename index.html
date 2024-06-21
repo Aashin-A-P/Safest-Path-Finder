@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,100;1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="index.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Aashin</title>
+
+</head>
+
+<body>
+  <div class="search-panel">
+    <div id="search-engine">
+      <form>
+        <div class="input-text">
+          <i class="fa-solid fa-bars" id="open-config-panel-button"></i>
+          <input type="text" id="search-engine-input" placeholder="Insert location" autocomplete="off">
+          <i class="fa-solid fa-xmark erase-content-i" id="input-cross-mark"></i>
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </form>
+      <div id="search-engine-results" class="search-engine-results"></div>
+    </div>
+  </div>
+
+  <div class="left-panel planning-route-panel">
+    <div class="route-buttons">
+      <div class="retrocede-btn route-btn" id="hide-route-panel"><i class="fa-solid fa-arrow-left"></i></div>
+      <div class="vehicle-panel">
+        <div class="route-btn" id="car"><i class="fa-solid fa-car"></i></div>
+        <div class="route-btn" id="walking"><i class="fa-solid fa-person-walking"></i></div>
+        <div class="route-btn" id="bike"><i class="fa-solid fa-person-biking"></i></div>
+        <div class="route-btn" id="train"><i class="fa-solid fa-train-subway"></i></div>
+      </div>
+    </div>
+    <hr>
+    <div class="route-form">
+      <div class="top-form">
+        <div class="select-location-panel">
+          <div class="location-input">
+            <i class="fa-solid fa-house-chimney"></i>
+            <div class="select-location-button" id="start-location">
+              <p>Select location</p>
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+          </div>
+          <div class="location-input">
+            <i class="fa-solid fa-map-pin"></i>
+            <div class="select-location-button" id="end-location">
+              <p>Select destination</p>
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="select-algorithm-container">
+          <div class="select-algorithm-panel">
+            <i class="fa-solid fa-code-branch"></i>
+            <div class="form-select">
+              <label for="select-1658324317245" class="select-algorithm-label">Algorithm</label>
+              <select class="form-control" name="select-1658324317245" id="select-1658324317245">
+                <option value="dijkstra">Dijkstra</option>
+                <option value="a-star" selected="true">A-Star (recommended)</option>
+                <option value="DFS" disabled>Deep First Search</option>
+                <option value="BFS" disabled>Breadth First Search</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="select-algorithm-container">
+          <input id="heuristicMultiplier-input" class="input-form" type="number" placeholder="Insert heuristic">
+        </div>
+
+        <div class="show-animations-container">
+          <div class="select-show-animations-panel">
+            <label class="switch">
+              <input type="checkbox" id="show-process-checkbox" checked="true">
+              <span class="slider round"></span>
+            </label>
+            Display animated process
+          </div>
+        </div>
+      </div>
+      <div class="end-form-container">
+        <div class="wrapper" id="calculate-route-button" class="calculate-route-button">
+          <a class="button">Calculate</a>
+        </div>
+        <p class="error-message" id="form-error-message">Please complete all the fields</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="left-panel config-panel">
+    <div id="hide-options-panel"><i class="fa-solid fa-arrow-left"></i></div>
+    <h1>Select your favourite map!</h1>
+    <div class="map-selection-container">
+    </div>
+  </div>
+
+
+  <div class="other-buttons-panel">
+    <button id="user-location-button" class="primary-button user-location-button"><i
+        class="fa-regular fa-compass"></i></button>
+    <button id="new-route-button" class="primary-button"><i class="fa-solid fa-route"></i></button>
+  </div>
+
+  <div id="notification" class="notifcation-panel">
+    <div class='loading-screen'>
+      <div class='loader'></div>
+    </div>
+    <p id="notification-text"></p>
+    <i class="fa-solid fa-xmark erase-content-i" id="input-cross-mark" style="visibility: inherit;"></i>
+  </div>
+
+  <div id="map"></div>
+</body>
+
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+  integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+  crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
+
+<script src="scripts/auxiliarMethods.js"></script>
+<script src="scripts/geolocationController.js"></script>
+<script src="scripts/map.js"></script>
+<script src="scripts/searchEngine.js"></script>
+<script src="scripts/zoomControl.js"></script>
+<script src="scripts/buildRequest.js"></script>
+<script src="scripts/notificationController.js"></script>
+<script src="scripts/routePlanning.js"></script>
+<script src="scripts/route.js"></script>
+<script src="scripts/formController.js"></script>
+<script src="scripts/algorithms/aStar.js"></script>
+<script src="scripts/algorithms/dijkstra.js"></script>
+<script src="scripts/path.js"></script>
+<script src="scripts/configPanel.js"></script>
+</html>
